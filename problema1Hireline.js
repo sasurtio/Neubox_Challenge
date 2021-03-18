@@ -1,6 +1,12 @@
-const prompt = require('prompt');
+const fs = require('fs');
+stdin = process.openStdin();
 
-prompt.start();
+input = '';
+
+stdin.on('data', (chunk) => input += chunk)
+
+stdin.on('end', () => split());
+
 let instructionLength = [];
 let instruction = [];
 let msgLength;
@@ -9,6 +15,19 @@ let msg;
 let aux = [[], []];
 let counting = [0, 0];
 let response = ['NO', 'NO'];
+
+const split = () => {
+    const lines = input.split('\n');
+
+    const linea1 = lines[0].split(' ');
+    instructionLength[0] = parseInt(linea1[0]);
+    instructionLength[1] = parseInt(linea1[1]);
+    msgLength = parseInt(linea1[2]);
+    instruction[0] = lines[1].split('');
+    instruction[1] = lines[2].split('');
+    msg = lines[3].split('');
+    decrypt();
+}
 
 const decrypt = () => {
     msg.forEach(msgLetter => {
@@ -33,32 +52,5 @@ const decrypt = () => {
             }
         }
     });
-    response.forEach(elem => console.log(elem));
+    fs.writeFile('output.txt', response.toString().replace(',', '\n'), (err) => err ? console.log(err) : []);
 }
-
-prompt.get(['linea1', 'linea2', 'linea3', 'linea4'], (err, result) => {
-    const linea1 = result.linea1.split(' ');
-    instructionLength[0] = parseInt(linea1[0]);
-    instructionLength[1] = parseInt(linea1[1]);
-    msgLength = parseInt(linea1[2]);
-    instruction[0] = result.linea2.split('');
-    instruction[1] = result.linea3.split('');
-    msg = result.linea4.split('');
-    decrypt();
-});
-
-
-// const result = {
-//     linea1: '11 15 38',
-//     linea2: 'CeseAlFuego',
-//     linea3: 'CorranACubierto',
-//     linea4: 'XXcaaamakkCCessseAAllFueeegooDLLKmmNNN',
-// }
-// const linea1 = result.linea1.split(' ');
-// instructionLength[0] = parseInt(linea1[0]);
-// instructionLength[1] = parseInt(linea1[1]);
-// msgLength = parseInt(linea1[2]);
-// instruction[0] = result.linea2.split('');
-// instruction[1] = result.linea3.split('');
-// msg = result.linea4.split('');
-// decrypt();

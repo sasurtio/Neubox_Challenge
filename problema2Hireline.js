@@ -1,36 +1,25 @@
-const prompt = require('prompt');
+const fs = require('fs');
+stdin = process.openStdin();
 
-prompt.start();
+input = '';
 
-let n;
-let round = [];
+stdin.on('data', (chunk) => input += chunk)
+stdin.on('end', () => calculate());
 
-const calculate = (turns) => {
+const calculate = () => {
+    const lines = input.split('\n');
+    const n = parseInt(lines.shift);
+
     let distance = 0;
-    turns.forEach(turn => {
+    lines.forEach(line => {
+        const turn = line.split(' ');
         const diff = turn[0] - turn[1];
         if (Math.abs(diff) > Math.abs(distance)) distance = diff;
-    });
-    if (distance > 0) console.log(1, distance);
-    else console.log(2, -distance);
+    })
+
+    let response;
+    if (distance > 0) response = '1 ' + distance;
+    else response = '2 ' + -distance;
+
+    fs.writeFile('output.txt', response, (err) => err ? console.log(err) : []);
 }
-prompt.get(['n'], (err, result) => {
-    n = parseInt(result.n);
-
-    round = Array.from(new Array(n), (x, i) => 'round' + (i+1));
-    prompt.get(round, (err, result) => {
-        const turns = [];
-        for (const round in result) turns.push(result[round].split(' '));
-        calculate(turns);
-    });
-});
-
-// n = 5;
-// round = [
-//     [140, 82],
-//     [89, 134],
-//     [90, 110],
-//     [112, 106],
-//     [88, 90],
-// ]
-// calculate(round);

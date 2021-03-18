@@ -1,26 +1,19 @@
-# linea1 = "11 15 38"
-# linea2 = "CeseAlFuego"
-# linea3 = "CorranACubierto"
-# linea4 = "XXcaaamakkCCessseAAllFueeegooDLLKmmNNN"
-# linea1 = linea1.split()
-# instructionLength = [None] * 2
-# instructionLength[0] = int(linea1[0])
-# instructionLength[1] = int(linea1[1])
-# msgLength = int(linea1[2])
-# instruction = [None] * 2
-# instruction[0] = list(linea2)
-# instruction[1] = list(linea3)
-# msg = list(linea4)
+import sys
 
-linea1 = input().split()
+lines = []
+
+for line in sys.stdin:
+    lines.append("".join(line.splitlines()))
+
+linea1 = lines[0].split()
 instructionLength = [None] * 2
 instructionLength[0] = int(linea1[0])
 instructionLength[1] = int(linea1[1])
 msgLength = int(linea1[2])
 instruction = [None] * 2
-instruction[0] = list(input())
-instruction[1] = list(input())
-msg = list(input())
+instruction[0] = list(lines[1])
+instruction[1] = list(lines[2])
+msg = list(lines[3])
 
 aux = [[None] * 2] * 2
 counting = [0] * 2
@@ -52,5 +45,6 @@ def decrypt():
 
 decrypt()
 
-for instruc in response:
-    print(instruc)
+responseStr = response[0] + '\n' + response[1]
+file = open('output.txt', 'w')
+file.write(responseStr)
